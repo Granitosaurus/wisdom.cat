@@ -43,7 +43,7 @@ def scrape_channel(channel, count):
     resp = requests.get(url)
     sel = Selector(text=resp.text)
     videos = sel.xpath("//h3/a/@href").extract()[:count]
-    all_videos = [i.decode('utf8').split('video_')[-1] for i in redis.scan(match='video_*')[1]]
+    all_videos = [i.split('video_')[-1] for i in redis.scan(match='video_*')[1]]
     items = []
     for url in videos:
         url = urljoin(resp.url, url)
