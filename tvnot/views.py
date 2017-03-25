@@ -64,7 +64,6 @@ def configure():
 @app.route('/archive')
 def archive():
     videos = all_videos()
-    print(videos)
     return render_template('archive.html', videos=videos)
 
 
