@@ -18,7 +18,7 @@ def clean():
 
 @app.cli.command('show')
 def show():
-    for video in redis.scan(match='video_*')[1]:
+    for video in redis.scan_iter(match='video_*'):
         print(video)
         for k, v in redis.hgetall(video).items():
             print('    {}: {}'.format(k, v))
@@ -34,7 +34,9 @@ def scrape(count=None):
         click.echo('scraping "{}"'.format(name))
         items = scrape_channel(chanel_id, count)
         for item in items:
-            redis.hmset('video_{}'.format(item['watch_id']), item)
+            result = redis.hmset('video_{}'.format(item['watch_id']), item)
+            if not result:
+                print('  failed to store: {}'.format(item))
         click.echo('  scraped {} items'.format(len(items)))
 
 
@@ -43,7 +45,7 @@ def scrape_channel(channel, count):
     resp = requests.get(url)
     sel = Selector(text=resp.text)
     videos = sel.xpath("//h3/a/@href").extract()[:count]
-    all_videos = [i.split('video_')[-1] for i in redis.scan(match='video_*')[1]]
+    all_videos = [i.split('video_')[-1] for i in redis.scan_iter(match='video_*')]
     items = []
     for url in videos:
         url = urljoin(resp.url, url)
