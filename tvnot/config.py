@@ -1,5 +1,4 @@
 # WTF_CSRF_ENABLED = True
-SITE_NAME = 'http://127.0.0.1:5000/'
 SECRET_KEY = 'very-secret'
 REDIS_URL = "redis://:@localhost:6379/0"
 AUTHORS = {

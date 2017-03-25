@@ -20,7 +20,7 @@ def clean():
 def show():
     for video in redis.scan(match='video_*')[1]:
         print(video)
-        for k,v in redis.hgetall(video).items():
+        for k, v in redis.hgetall(video).items():
             print('    {}: {}'.format(k, v))
 
 

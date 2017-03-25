@@ -10,12 +10,12 @@ from tvnot import scraper
 def run_schedule():
     while 1:
         schedule.run_pending()
-        time.sleep(5)
+        time.sleep(10)
 
 
 def setup_scheduler():
     print('setting up scheduler')
-    job = schedule.every(1).minutes
+    job = schedule.every(30).minutes
     job.do(scraper.scrape)
     t = Thread(target=run_schedule)
     t.start()
@@ -23,4 +23,4 @@ def setup_scheduler():
 
 if __name__ == "__main__":
     setup_scheduler()
-    app.run(use_reloader=False)
+    app.run(host='0.0.0.0', use_reloader=False)
