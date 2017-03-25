@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<html lang="en">
+<head>
+</head>
+<body>
+<div class="header">
+  <a href="/">
+    NoTV - bite size videos that shouldn't dumb you down.
+  </a>
+</div>
+<div class="content">
+  {% block content %}
+  {% endblock %}
+</div>
+<div class="footer">
+  <a href="/configure">configure</a> |
+  <a href="/archive">archive</a> |
+  <a href="/about">about</a>
+</div>
+</body>
+
+</html>

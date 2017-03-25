@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<script language="JavaScript">
+  var checked = true;
+  function toggle() {
+    checkboxes = document.getElementsByClassName("channel-checkbox");
+    var all_checked = Object.keys(checkboxes).every(function(k){ return checkboxes[k].checked });
+    checked = !all_checked;
+    for (var i = 0, n = checkboxes.length; i < n; i++) {
+      checkboxes[i].checked = checked;
+    }
+    checked = !checked
+  }
+</script>
+<div class="data">
+  <form class="config">
+    <h2>Enabled channels:</h2>
+    <em>Here you can set which channels are enabled for generation of the video stream</em>
+    <div class="input-channels">
+      {% for author, author_id in config.AUTHORS.items() %}
+      <div class="input-channel">
+        <input class="channel-checkbox" type="checkbox" name="{{ author_id }}"
+               {% if author in session.get('authors', []) %} checked="checked" {% endif %}>
+        <a href="https://youtube.com/channel/{{author_id}}" title="{{ author_desc }}">{{ author }}</a>
+      </div>
+      {% endfor %}
+      <div>
+        <a onClick="toggle()">*toggle all</a>
+      </div>
+    </div>
+    <div>
+      <input type="submit" value="Submit" formmethod="post">
+    </div>
+  </form>
+</div>
+
+{% endblock content %}

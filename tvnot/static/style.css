@@ -1,0 +1,42 @@
+html {
+  background: #00222d;
+  color: #839496;
+}
+body {
+  text-align: center;
+  margin: 0 auto;
+  padding: 0 auto;
+  width: 60%;
+}
+a {
+  text-align: center;
+  color: #268bd2;
+  text-shadow: 1px 1px 1px #073642;
+  text-decoration: none;
+}
+a:hover {
+  color: #2aa198;
+  cursor: pointer;
+}
+div.content {
+  margin: 10px 0;
+  padding: 0 0 20px 0;
+}
+div.header {
+  padding: 20px 0 30px 0;
+  color: #b58900;
+}
+div.header a {
+  color: #b58900;
+}
+div.footer a {
+  display: inline-block;
+}
+div.input-channels {
+  text-align: left;
+}
+div.input-channel {
+  display: inline-block;
+  padding: 2px;
+  min-width: 200px;
+}

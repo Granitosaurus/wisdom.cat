@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h3> Archive of all videos: </h3>
+<div class="data">
+  {% for video in videos %}
+  <span class="video">
+  <a href="https://youtube.com/watch?v={{ video['watch_id'] }}" title="{{ video['name'] }}">
+    <img src="https://i.ytimg.com/vi/{{video['watch_id']}}/maxresdefault.jpg" width="200">
+  </a>
+  </span>
+  {% endfor %}
+  </form>
+</div>
+
+{% endblock content %}

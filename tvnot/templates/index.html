@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<iframe width="800" height="450" src="https://www.youtube.com/embed/{{ item.watch_id }}" frameborder="0"
+        allowfullscreen></iframe>
+<div class="data">
+  <h3>{{ item.name }}</h3>
+  <span>by <a href="https://www.youtube.com/{{ item.author_id }}">{{ item.author }}</a></span>
+  <span>on {{ item.date }}</span>
+  <div>viewed {{ '{0:,}'.format(item.views) }} times</div>
+</div>
+<h3>
+  <a href="/post/{{ video_index + 1}}">>>Something else<<</a>
+</h3>
+
+{% endblock content %}

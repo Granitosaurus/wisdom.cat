@@ -1,0 +1,55 @@
+@import "variables.less";
+
+html {
+  background: @background;
+  color: @text;
+}
+
+body {
+  text-align: center;
+  margin: 0 auto;
+  padding: 0 auto;
+  width: @base_width;
+}
+
+
+a {
+  text-align: center;
+  color: @blue;
+  text-shadow: 1px 1px 1px @content;
+  text-decoration: none;
+}
+
+a:hover {
+  color: @cyan;
+  cursor: pointer;
+}
+
+div.content {
+  margin: 10px 0;
+  padding: 0 0 20px 0;
+}
+
+div.header {
+  padding: 20px 0 30px 0;
+  color: @yellow;
+}
+
+div.header a{
+  color: @yellow;
+}
+
+div.footer a{
+  display: inline-block;
+}
+
+//Form style for config page
+div.input-channels {
+  text-align: left;
+}
+
+div.input-channel {
+  display: inline-block;
+  padding: 2px;
+  min-width: 200px;
+}
