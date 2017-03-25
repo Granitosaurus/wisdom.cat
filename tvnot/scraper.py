@@ -1,30 +1,41 @@
-from collections import OrderedDict
 from urllib.parse import urljoin
 
 import requests
 import click
 from parsel import Selector
 from tvnot import app, redis
-from tvnot.databases import connect_db
 from tvnot import config
 
-DEFAULT_COUNT = 5
+DEFAULT_COUNT = 1
+
+
+@app.cli.command('clean')
+def clean():
+    if 'y' not in input('are you sure you want to delete all of the videos? (y/n)').lower():
+        return
+    redis.flushall()
+
+
+@app.cli.command('show')
+def show():
+    for video in redis.scan(match='video_*')[1]:
+        print(video)
+        for k,v in redis.hgetall(video).items():
+            print('    {}: {}'.format(k, v))
 
 
 @app.cli.command('scrape')
 @click.option('-c', '--count', type=click.INT, help='limit of videos per channel [default:5]')
-def scrape(count=DEFAULT_COUNT):
+def scrape(count=None):
     """update database with new entries"""
+    count = count or DEFAULT_COUNT
     channels = config.AUTHORS
-    db = connect_db()
     for name, chanel_id in channels.items():
         click.echo('scraping "{}"'.format(name))
         items = scrape_channel(chanel_id, count)
         for item in items:
-            redis.set('video_{}'.format(item['watch_id'], item))
+            redis.hmset('video_{}'.format(item['watch_id']), item)
         click.echo('  scraped {} items'.format(len(items)))
-    db.commit()
-    db.close()
 
 
 def scrape_channel(channel, count):
@@ -32,9 +43,7 @@ def scrape_channel(channel, count):
     resp = requests.get(url)
     sel = Selector(text=resp.text)
     videos = sel.xpath("//h3/a/@href").extract()[:count]
-    cur = connect_db().cursor()
-    all_videos = []  # todo don't scrape the same
-    cur.close()
+    all_videos = [i.decode('utf8').split('video_')[-1] for i in redis.scan(match='video_*')[1]]
     items = []
     for url in videos:
         url = urljoin(resp.url, url)
@@ -49,7 +58,7 @@ def scrape_channel(channel, count):
 def scrape_video(url):
     resp = requests.get(url)
     sel = Selector(text=resp.text)
-    item = OrderedDict()
+    item = dict()
     itemprop = lambda name: sel.xpath("//meta[@itemprop='{}']/@content".format(name)).extract_first()
     item['watch_id'] = url.split('?v=')[1]
     item['name'] = itemprop('name')

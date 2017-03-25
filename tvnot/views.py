@@ -1,9 +1,11 @@
+from datetime import datetime
+
 from flask import render_template, request, redirect, url_for, g, session, abort
 from jinja2 import TemplateNotFound
 
 from tvnot import app
-from tvnot.databases import get_db, connect_db
 from tvnot import config
+from tvnot.storage import all_videos
 
 
 @app.before_first_request
@@ -15,19 +17,15 @@ def generate_videos():
     """returns videos based on current session profile configuration"""
     if not session.get('authors'):
         session['authors'] = config.AUTHORS
-    db = connect_db()
-    authors_ph = ', '.join('?' for a in session['authors'].values())
-    cur = db.execute('SELECT * '
-                     'FROM entries '
-                     'WHERE author_id IN ({}) '
-                     'ORDER BY date DESC'.format(authors_ph), list(session['authors'].values()))
-    values = [c['watch_id'] for c in cur.fetchall()]
-    cur.close()
+    authors = session['authors'].values()
+    videos = all_videos()
+    videos.sort(key=lambda v: datetime.strptime(v['date'], '%Y-%m-%d'), reverse=True)
+    values = [v for v in videos if v['author_id'] in authors]
     return values
 
 
-def get_videos():
-    if not session.get('videos'):
+def get_videos(regenerate=False):
+    if not session.get('videos') or regenerate:
         session['videos'] = generate_videos()
     return session['videos']
 
@@ -35,7 +33,8 @@ def get_videos():
 @app.route('/')
 def index():
     # update videos every time in case config changed or new videos in the database
-    videos = get_videos()
+    # todo smarter video regeneration system - update only when new crawl or settings have changed
+    videos = get_videos(regenerate=True)
     del session['videos']
     session['videos'] = videos
     return redirect(url_for('post', post=0))
@@ -45,11 +44,7 @@ def index():
 def post(post):
     if post >= len(get_videos()):
         return redirect(url_for('post', post=0))
-    db = get_db()
-    cur = db.execute('SELECT * '
-                     'FROM entries '
-                     'WHERE watch_id=:watch_id', {'watch_id': get_videos()[post]})
-    item = cur.fetchone()
+    item = get_videos()[post]
     return render_template('index.html',
                            item=item,
                            video_index=post)
@@ -68,12 +63,9 @@ def configure():
 
 @app.route('/archive')
 def archive():
-    db = get_db()
-    cur = db.execute('SELECT * '
-                     'FROM entries '
-                     'ORDER BY date DESC')
-    all_videos = cur.fetchall()
-    return render_template('archive.html', videos=all_videos)
+    videos = all_videos()
+    print(videos)
+    return render_template('archive.html', videos=videos)
 
 
 @app.route('/<string:page_name>')

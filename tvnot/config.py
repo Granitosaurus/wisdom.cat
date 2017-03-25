@@ -1,9 +1,7 @@
 # WTF_CSRF_ENABLED = True
-import os
-
+SITE_NAME = 'http://127.0.0.1:5000/'
 SECRET_KEY = 'very-secret'
-# SERVER_NAME = '127.0.0.1:5000'
-REDIS_URL = "redis://:password@localhost:6379/0"
+REDIS_URL = "redis://:@localhost:6379/0"
 AUTHORS = {
     'CGP Grey': 'UC2C_jShtL725hvbm1arSV9w',
     'Computerphile': 'UC9-y-6csu5WGm29I7JiwpnA',

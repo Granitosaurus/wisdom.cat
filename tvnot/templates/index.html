@@ -6,7 +6,7 @@
   <h3>{{ item.name }}</h3>
   <span>by <a href="https://www.youtube.com/{{ item.author_id }}">{{ item.author }}</a></span>
   <span>on {{ item.date }}</span>
-  <div>viewed {{ '{0:,}'.format(item.views) }} times</div>
+  <div>viewed {{ '{0:,}'.format(item.views|int) }} times</div>
 </div>
 <h3>
   <a href="/post/{{ video_index + 1}}">>>Something else<<</a>
