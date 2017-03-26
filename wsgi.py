@@ -3,7 +3,7 @@ from threading import Thread
 import schedule
 import time
 
-from tvnot import app
+from tvnot import app as application
 from tvnot import scraper
 
 
@@ -23,4 +23,4 @@ def setup_scheduler():
 
 if __name__ == "__main__":
     setup_scheduler()
-    app.run(host='0.0.0.0', use_reloader=False)
+    application.run(use_reloader=False)
