@@ -3,8 +3,8 @@ from urllib.parse import urljoin
 import requests
 import click
 from parsel import Selector
-from tvnot import app, redis
-from tvnot import config
+from wisdomcat import app, redis
+from wisdomcat import config
 
 DEFAULT_COUNT = 1
 

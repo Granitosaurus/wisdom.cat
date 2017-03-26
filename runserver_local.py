@@ -1,5 +1,5 @@
 from runserver import setup_scheduler
-from tvnot import app
+from wisdomcat import app
 
 if __name__ == "__main__":
     setup_scheduler()

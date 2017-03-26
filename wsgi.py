@@ -3,8 +3,8 @@ from threading import Thread
 import schedule
 import time
 
-from tvnot import app as application
-from tvnot import scraper
+from wisdomcat import app as application
+from wisdomcat import scraper
 
 
 def run_schedule():

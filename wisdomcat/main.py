@@ -3,7 +3,7 @@ from threading import Thread
 import schedule
 import time
 
-from tvnot import scraper, app
+from wisdomcat import scraper, app
 
 
 def run_schedule():

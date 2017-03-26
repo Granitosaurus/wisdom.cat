@@ -1,6 +1,6 @@
 from itertools import islice
 
-from tvnot import redis
+from wisdomcat import redis
 
 
 def all_videos(limit=None):

@@ -7,6 +7,6 @@ redis = FlaskRedis(app, decode_responses=True)
 
 
 
-import tvnot.views
-import tvnot.scraper
-import tvnot.scheduler
+import wisdomcat.views
+import wisdomcat.scraper
+import wisdomcat.scheduler

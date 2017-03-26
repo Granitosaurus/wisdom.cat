@@ -3,9 +3,9 @@ import datetime
 from flask import render_template, request, redirect, url_for, g, session, abort
 from jinja2 import TemplateNotFound
 
-from tvnot import app
-from tvnot import config
-from tvnot.storage import all_videos
+from wisdomcat import app
+from wisdomcat import config
+from wisdomcat.storage import all_videos
 
 
 @app.before_first_request
