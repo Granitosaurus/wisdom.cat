@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from flask import render_template, request, redirect, url_for, g, session, abort
 from jinja2 import TemplateNotFound
@@ -13,28 +13,38 @@ def make_session_permanent():
     session.permanent = True
 
 
-def generate_videos():
+def generate_videos(force=False):
     """returns videos based on current session profile configuration"""
+    def gen():
+        authors = session['authors'].values()
+        videos = all_videos()
+        videos.sort(key=lambda v: datetime.datetime.strptime(v['date'], '%Y-%m-%d'), reverse=True)
+        values = [v for v in videos if v['author_id'] in authors]
+        session['regen_timestamp'] = now.timestamp()
+        return values
+
     if not session.get('authors'):
         session['authors'] = config.AUTHORS
-    authors = session['authors'].values()
-    videos = all_videos()
-    videos.sort(key=lambda v: datetime.strptime(v['date'], '%Y-%m-%d'), reverse=True)
-    values = [v for v in videos if v['author_id'] in authors]
-    return values
+    # generate videos only once every 5 minutes or when forced
+    now = datetime.datetime.utcnow()
+    if not session.get('regen_timestamp', None) or force:
+        return gen()
+    else:
+        last_regen = datetime.datetime.fromtimestamp(session['regen_timestamp'])
+        if last_regen - datetime.timedelta(5) > now:
+            return gen()
+    return []
 
 
 def get_videos(regenerate=False):
     if not session.get('videos') or regenerate:
-        session['videos'] = generate_videos()
+        session['videos'] = generate_videos(regenerate) or session['videos']
     return session['videos']
 
 
 @app.route('/')
 def index():
-    # update videos every time in case config changed or new videos in the database
-    # todo smarter video regeneration system - update only when new crawl or settings have changed
-    videos = get_videos(regenerate=True)
+    videos = get_videos()
     del session['videos']
     session['videos'] = videos
     return redirect(url_for('post', post=0))
@@ -58,12 +68,14 @@ def configure():
             if request.form.get(author_id, 'off') == 'on':
                 authors[author] = author_id
         session['authors'] = authors
+        get_videos(regenerate=True)
+        return redirect(url_for('index'))
     return render_template('configure.html')
 
 
 @app.route('/archive')
 def archive():
-    videos = all_videos()
+    videos = all_videos(limit=100)
     return render_template('archive.html', videos=videos)
 
 

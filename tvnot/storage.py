@@ -1,6 +1,13 @@
+from itertools import islice
+
 from tvnot import redis
 
 
-def all_videos():
+def all_videos(limit=None):
     videos = redis.scan_iter(match='video_*')
-    return [redis.hgetall(v) for v in videos]
+    results = []
+    if limit:
+        videos = islice(videos, 0, limit)
+    for v in videos:
+        results.append(redis.hgetall(v))
+    return results
