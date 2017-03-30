@@ -9,7 +9,7 @@ from wisdomcat import config
 
 @app.before_first_request
 def make_session_permanent():
-    session.setdefault('authors', config.AUTHORS)
+    session['authors'] = config.AUTHORS
     session.permanent = True
 
 

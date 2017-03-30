@@ -44,6 +44,7 @@ def scrape(count=None):
 
 
 def scrape_channel(channel, count):
+    # todo ignore youtube red videos
     url = "https://www.youtube.com/channel/{}/videos".format(channel)
     resp = requests.get(url)
     sel = Selector(text=resp.text)
