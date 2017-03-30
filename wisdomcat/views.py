@@ -9,13 +9,18 @@ from wisdomcat import config
 
 @app.before_first_request
 def make_session_permanent():
-    session['authors'] = config.AUTHORS
     session.permanent = True
+
+
+def get_authors():
+    if not session.get('authors'):
+        session['authors'] = config.AUTHORS
+    return session['authors']
 
 
 def get_videos():
     videos = []
-    for channel in session['authors']:
+    for channel in get_authors():
         key_name = 'channel:{}'.format(channel)
         videos.extend(redis.lrange(key_name, 0, -1))
     videos = sorted([json.loads(v) for v in videos], key=lambda v: v['timestamp'], reverse=True)
