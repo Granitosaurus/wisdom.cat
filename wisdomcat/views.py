@@ -5,7 +5,6 @@ from jinja2 import TemplateNotFound
 
 from wisdomcat import app, redis
 from wisdomcat import config
-from wisdomcat.storage import all_videos
 
 
 @app.before_first_request
