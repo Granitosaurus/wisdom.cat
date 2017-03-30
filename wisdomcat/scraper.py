@@ -1,3 +1,5 @@
+import json
+from datetime import datetime
 from urllib.parse import urljoin
 
 import requests
@@ -18,10 +20,11 @@ def clean():
 
 @app.cli.command('show')
 def show():
-    for video in redis.scan_iter(match='video_*'):
-        print(video)
-        for k, v in redis.hgetall(video).items():
-            print('    {}: {}'.format(k, v))
+    for channel in redis.scan_iter(match='channel:*'):
+        videos = [json.loads(v) for v in redis.lrange(channel, 0, -1)]
+        print('{: <55} {}'.format(channel.split(':')[1], videos[0]['author_id']))
+        for video in videos:
+            print('  {: <65.62}: {}'.format(video['name'], video['watch_id']))
 
 
 @app.cli.command('scrape')
@@ -34,7 +37,7 @@ def scrape(count=None):
         click.echo('scraping "{}"'.format(name))
         items = scrape_channel(chanel_id, count)
         for item in items:
-            result = redis.hmset('video_{}'.format(item['watch_id']), item)
+            result = redis.lpush('channel:{}'.format(item['author']), json.dumps(item))
             if not result:
                 print('  failed to store: {}'.format(item))
         click.echo('  scraped {} items'.format(len(items)))
@@ -45,7 +48,8 @@ def scrape_channel(channel, count):
     resp = requests.get(url)
     sel = Selector(text=resp.text)
     videos = sel.xpath("//h3/a/@href").extract()[:count]
-    all_videos = [i.split('video_')[-1] for i in redis.scan_iter(match='video_*')]
+    all_videos = [redis.lrange(i, 0, -1) for i in redis.scan_iter(match='channel:*')]
+    all_videos = [json.loads(i)['watch_id'] for ch in all_videos for i in ch]
     items = []
     for url in videos:
         url = urljoin(resp.url, url)
@@ -65,11 +69,8 @@ def scrape_video(url):
     item['watch_id'] = url.split('?v=')[1]
     item['name'] = itemprop('name')
     item['date'] = itemprop('datePublished')
+    item['timestamp'] = datetime.strptime(itemprop('datePublished'), '%Y-%m-%d').timestamp()
     item['views'] = itemprop('interactionCount')
     item['author'] = sel.xpath("//div[@class='yt-user-info']/a/text()").extract_first()
     item['author_id'] = itemprop('channelId')
     return item
-
-
-if __name__ == '__main__':
-    scrape()

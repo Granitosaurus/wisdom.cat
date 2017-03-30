@@ -7,13 +7,11 @@ from wisdomcat import app as application
 from wisdomcat import scraper
 
 
-def run_schedule():
-    while 1:
-        schedule.run_pending()
-        time.sleep(10)
-
-
 def setup_scheduler():
+    def run_schedule():
+        while 1:
+            schedule.run_pending()
+            time.sleep(10)
     print('setting up scheduler')
     job = schedule.every(30).minutes
     job.do(scraper.scrape)

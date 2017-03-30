@@ -6,7 +6,6 @@ app.config.from_pyfile('config.py')
 redis = FlaskRedis(app, decode_responses=True)
 
 
-
 import wisdomcat.views
 import wisdomcat.scraper
 import wisdomcat.scheduler

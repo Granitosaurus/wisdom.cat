@@ -1,4 +1,4 @@
-from runserver import setup_scheduler
+from wsgi import setup_scheduler
 from wisdomcat import app
 
 if __name__ == "__main__":
