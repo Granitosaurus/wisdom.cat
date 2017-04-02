@@ -16,6 +16,7 @@ Wisdom cat runs on three things: `requests` and `parsel` to scrape the videos, `
 
 ## Setup and running
     
+    # <make sure redis server is running>
     git clone git@github.com:Granitosaurus/wisdom.cat.git wisdomcat
     cd wisdomcat
     pip install -r requirements.txt

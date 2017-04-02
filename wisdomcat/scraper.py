@@ -8,7 +8,7 @@ from parsel import Selector
 from wisdomcat import app, redis
 from wisdomcat import config
 
-DEFAULT_COUNT = 1
+DEFAULT_COUNT = 5
 
 
 @app.cli.command('clean')
@@ -70,6 +70,7 @@ def scrape_video(url):
     item['watch_id'] = url.split('?v=')[1]
     item['name'] = itemprop('name')
     item['date'] = itemprop('datePublished')
+    # todo more accurate date and timestamp
     item['timestamp'] = datetime.strptime(itemprop('datePublished'), '%Y-%m-%d').timestamp()
     item['views'] = itemprop('interactionCount')
     item['author'] = sel.xpath("//div[@class='yt-user-info']/a/text()").extract_first()

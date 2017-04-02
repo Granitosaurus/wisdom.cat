@@ -13,6 +13,9 @@ AUTHORS = {
     'Kurzgesagt': 'UCsXVk37bltHxD1rDPwtNM8Q',
     'TED': 'UCAuUUnT6oDeKwE6v1NGQxug',
     'TED-Ed': 'UCsooa4yRKGN_zEE8iknghZA',
+    'Vsauce2': 'UCqmugCqELzhIMNYnsjScXXw',
+    'PBS Idea Channel': 'UC3LqW4ijMoENQ2Wv17ZrFJA',
+    'Seeker': 'UCzWQYUVCpZqtN93H8RR44Qw',
 }
 
 DEFAULT_AUTHORS = {
