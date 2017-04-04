@@ -16,6 +16,7 @@ AUTHORS = {
     'Vsauce2': 'UCqmugCqELzhIMNYnsjScXXw',
     'PBS Idea Channel': 'UC3LqW4ijMoENQ2Wv17ZrFJA',
     'Seeker': 'UCzWQYUVCpZqtN93H8RR44Qw',
+    'Tom Scott': 'UCBa659QWEk1AI4Tg--mrJ2A',
 }
 
 DEFAULT_AUTHORS = {
